@@ -1,10 +1,10 @@
 from selenium import webdriver
-#from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-#from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
 
 import csv
 import datetime
@@ -28,27 +28,29 @@ class Scraper:
     """
     
     def __init__(self):
-        #chrome_options = Options()
-        #chrome_options.add_argument("--headless")
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
         print("3. Scraper __init__")
         self.url = "https://www.screwfix.com"
         #self.driver = webdriver.Chrome()
         #self.driver = webdriver.Chrome(ChromeDriverManager().install())
-        #self.driver = webdriver.Chrome()
-        #self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver = webdriver.Chrome(options=chrome_options)
         
-        self.driver = webdriver.Remote('http://127.0.0.1:4444/wd/hub', options=webdriver.ChromeOptions)
+        #self.driver = webdriver.Remote('http://127.0.0.1:4444/wd/hub', options=chrome_options)
         
+        #self.driver = webdriver.Remote('http://127.0.0.1:4444/wd/hub')
+
         self.sub_category_list = []
         self.product_links_list = []
         self.product_features_table = []
         self.product_features_dictionary = {}
-        self.output_path = "/home/nick/Documents/AICore/Data-Collection/Scraper/raw_data/"
+        self.output_path = "~/raw_data/"
     
     def open_url(self):
         '''
         Open the specified url, www.screwfix.com
         '''
+        print("4. opening URL")
         self.driver.get(self.url)
 
         return self.driver.current_url
@@ -64,6 +66,7 @@ class Scraper:
         Returns:
             Void
         '''
+        print("5, cookies check")
         WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//iframe')))
         iframes = self.driver.find_element(by=By.XPATH, value='//iframe')
         self.driver.switch_to.frame(iframes)
@@ -84,6 +87,7 @@ class Scraper:
         Returns:
             Void
         '''
+        print("6. initial search")
         WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="keyword-search"]')))
         search_bar = self.driver.find_element(by=By.XPATH, value='//*[@id="keyword-search"]')
         search_bar.send_keys(search_item)
@@ -103,6 +107,7 @@ class Scraper:
         Returns:
             Void 
         '''
+        print("7. sub categories check")
         try:
             WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//ul[@class="n ln__cats"]')))
             sub_category_top_webelement = self.driver.find_element(by=By.XPATH, value='//ul[@class="n ln__cats"]')
@@ -123,6 +128,7 @@ class Scraper:
         If sub-categories were detected, then display them to the user and
         request the user's choice from them
         '''
+        print("8. sub-category choice")
         if not self.sub_category_list:
             return
         else:
@@ -144,6 +150,7 @@ class Scraper:
         Returns:
             Void
         '''
+        print("9. get product links")
         # Get links to individual products 
         WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//div[@class="row flex-container"]')))
         product_links_webelement = self.driver.find_element(By.XPATH, value='//div[@class="row flex-container"]')
@@ -171,6 +178,7 @@ class Scraper:
         file_date = str(datetime.datetime.today())
         
         for i in self.product_links_list:
+            print("10. getting product details", i)
             self.driver.get(i)
             WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, '//a[@href="#product_additional_details_container"]')))
             specifications_tab=self.driver.find_element(By.XPATH, value='//a[@href="#product_additional_details_container"]')
