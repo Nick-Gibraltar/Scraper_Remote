@@ -1,10 +1,10 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+#from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+#from webdriver_manager.chrome import ChromeDriverManager
 
 import csv
 import datetime
@@ -33,9 +33,12 @@ class Scraper:
         print("3. Scraper __init__")
         self.url = "https://www.screwfix.com"
         #self.driver = webdriver.Chrome()
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome()
+        #self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        #self.driver = webdriver.Chrome()
         #self.driver = webdriver.Chrome(options=chrome_options)
+        
+        self.driver = webdriver.Remote('http://127.0.0.1:4444/wd/hub', options=webdriver.ChromeOptions)
+        
         self.sub_category_list = []
         self.product_links_list = []
         self.product_features_table = []
