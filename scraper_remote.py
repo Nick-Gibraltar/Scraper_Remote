@@ -31,11 +31,18 @@ class Scraper:
     def __init__(self):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-setuid-sandbox")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("window-size=1920,1080")
+        
+
         print("3. Scraper __init__")
         self.url = "https://www.screwfix.com"
         #self.driver = webdriver.Chrome()
-        #self.driver = webdriver.Chrome(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+        #self.driver = webdriver.Chrome(options=chrome_options)
         
         #self.driver = webdriver.Remote('http://127.0.0.1:4444/wd/hub', options=chrome_options)
         
