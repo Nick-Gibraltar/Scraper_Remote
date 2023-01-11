@@ -9,6 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import csv
 import datetime
 import json
+import os
 import requests
 
 class Scraper:
@@ -44,7 +45,11 @@ class Scraper:
         self.product_links_list = []
         self.product_features_table = []
         self.product_features_dictionary = {}
-        self.output_path = "~/raw_data/"
+
+        self.output_path = os.path.expanduser("~")+"/" + "raw_data"
+        if not os.path.exists(self.output_path):
+            os.makedirs(self.output_path)
+            print("3. init creating new output path")
     
     def open_url(self):
         '''
@@ -173,7 +178,7 @@ class Scraper:
         Returns:
             Void
         '''
-    
+
         headers={"User-Agent":"Chrome/107.0.5304.110"}
         file_date = str(datetime.datetime.today())
         
@@ -205,7 +210,7 @@ class Scraper:
             product_code = product_name[product_name.rfind("(")+1:product_name.rfind(")")]
 
             response=requests.get(product_image_link,headers=headers)
-            file_name=self.output_path+file_date+"_"+product_code+".jpg"
+            file_name=self.output_path+"/"+file_date+"_"+product_code+".jpg"
             if response.status_code==200:
                 with open(file_name, "wb") as f:
                     f.write(response.content)
@@ -214,7 +219,7 @@ class Scraper:
                 print(product_image_link)
 
     def export_json(self):
-        with open(self.output_path+"product-features-data.json", "w") as f:
+        with open(self.output_path+"/product-features-data.json", "w") as f:
             json.dump(self.product_features_dictionary, f)
 
     def transform_product_table(self):
@@ -260,7 +265,7 @@ class Scraper:
             rows.append(new_row)
         product_features_list.insert(0,"")
 
-        with open(self.output_path+"scraped-data.csv", "w") as f:
+        with open(self.output_path+"/scraped-data.csv", "w") as f:
             write = csv.writer(f)
             write.writerow(product_features_list)
             write.writerows(rows)
