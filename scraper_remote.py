@@ -29,6 +29,7 @@ class Scraper:
     """
     
     def __init__(self):
+        
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
@@ -38,16 +39,10 @@ class Scraper:
         chrome_options.add_argument("window-size=1920,1080")
         chrome_options.add_argument("user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005 Safari/537.36'") 
 
-
         print("3. Scraper __init__")
         self.url = "https://www.screwfix.com"
-        #self.driver = webdriver.Chrome()
+
         self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
-        #self.driver = webdriver.Chrome(options=chrome_options)
-        
-        #self.driver = webdriver.Remote('http://127.0.0.1:4444/wd/hub', options=chrome_options)
-        
-        #self.driver = webdriver.Remote('http://127.0.0.1:4444/wd/hub')
 
         self.sub_category_list = []
         self.product_links_list = []
